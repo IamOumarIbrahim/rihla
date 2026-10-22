@@ -23,6 +23,16 @@ DB_PATH = Path(__file__).parent / "rihla.db"
 ADMIN_EMAIL = os.environ.get("ADMIN_EMAIL", "admin@hotmail.com")
 ADMIN_PASSWORD = os.environ.get("ADMIN_PASSWORD", "admin1234")
 
+# Safety when the site is online. Set RIHLA_ENV=production in the WSGI file.
+# PythonAnywhere also sets PYTHONANYWHERE_DOMAIN. Local use is not affected.
+ONLINE = os.environ.get("RIHLA_ENV") == "production" or bool(os.environ.get("PYTHONANYWHERE_DOMAIN"))
+if ONLINE:
+    if app.secret_key == "dev-secret-change-me" or len(app.secret_key) < 32:
+        raise RuntimeError("Set a SECRET_KEY of at least 32 characters before running online.")
+    if ADMIN_PASSWORD == "admin1234" or len(ADMIN_PASSWORD) < 10:
+        raise RuntimeError("Set an ADMIN_PASSWORD of at least 10 characters before running online.")
+    app.config["SESSION_COOKIE_SECURE"] = True  # login cookies only travel over HTTPS
+
 # Trip data (details, photos, availability rules) lives in trips.py.
 EXPERIENCES = TRIPS
 
@@ -366,6 +376,10 @@ def delete_booking(booking_id):
     return redirect(url_for("admin_bookings"))
 
 
+# Create the tables when a host (like PythonAnywhere) imports the app,
+# not only when you start it with "python app.py".
+init_db()
+
+
 if __name__ == "__main__":
-    init_db()
     app.run(host="127.0.0.1", port=5000)
