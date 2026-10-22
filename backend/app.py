@@ -8,6 +8,7 @@ from pathlib import Path
 from flask import (
     Flask, flash, g, redirect, render_template, request, session, url_for,
 )
+from werkzeug.security import check_password_hash, generate_password_hash
 
 app = Flask(__name__)
 app.secret_key = os.environ.get("SECRET_KEY", "dev-secret-change-me")
@@ -48,6 +49,17 @@ def init_db():
     db = sqlite3.connect(DB_PATH)
     db.execute(
         """
+        CREATE TABLE IF NOT EXISTS customers (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT NOT NULL,
+            email TEXT NOT NULL UNIQUE,
+            password_hash TEXT NOT NULL,
+            created_at TEXT NOT NULL
+        )
+        """
+    )
+    db.execute(
+        """
         CREATE TABLE IF NOT EXISTS bookings (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             name TEXT NOT NULL,
@@ -56,14 +68,17 @@ def init_db():
             date TEXT NOT NULL,
             guests INTEGER NOT NULL,
             created_at TEXT NOT NULL,
-            status TEXT NOT NULL DEFAULT 'confirmed'
+            status TEXT NOT NULL DEFAULT 'confirmed',
+            customer_id INTEGER
         )
         """
     )
-    # Upgrade an older database that has no "status" column yet
+    # Upgrade an older database that is missing newer columns
     columns = [row[1] for row in db.execute("PRAGMA table_info(bookings)")]
     if "status" not in columns:
         db.execute("ALTER TABLE bookings ADD COLUMN status TEXT NOT NULL DEFAULT 'confirmed'")
+    if "customer_id" not in columns:
+        db.execute("ALTER TABLE bookings ADD COLUMN customer_id INTEGER")
     db.commit()
     db.close()
 
@@ -81,6 +96,101 @@ def get_experiences():
         booked = booked_by_name.get(e["name"], 0)
         result.append({**e, "booked": booked, "remaining": max(e["capacity"] - booked, 0)})
     return result
+
+
+# ---------- Customer accounts ----------
+
+def current_customer():
+    """The logged in customer (a row) or None."""
+    customer_id = session.get("customer_id")
+    if not customer_id:
+        return None
+    row = get_db().execute(
+        "SELECT id, name, email FROM customers WHERE id = ?", (customer_id,)
+    ).fetchone()
+    if row is None:
+        session.pop("customer_id", None)
+    return row
+
+
+def safe_next(target):
+    """Only allow redirects to pages inside this site."""
+    if target and target.startswith("/") and not target.startswith("//") and "\\" not in target:
+        return target
+    return None
+
+
+@app.route("/login", methods=["GET", "POST"])
+def customer_login():
+    next_url = safe_next(request.values.get("next"))
+    if current_customer():
+        return redirect(next_url or url_for("home"))
+
+    error = None
+    if request.method == "POST":
+        email = request.form.get("email", "").strip().lower()
+        password = request.form.get("password", "")
+
+        row = get_db().execute("SELECT * FROM customers WHERE email = ?", (email,)).fetchone()
+        if row and check_password_hash(row["password_hash"], password):
+            session["customer_id"] = row["id"]
+            return redirect(next_url or url_for("home"))
+        error = "Wrong email or password."
+
+    return render_template("login.html", active="login", error=error, next_url=next_url)
+
+
+@app.route("/register", methods=["GET", "POST"])
+def customer_register():
+    next_url = safe_next(request.values.get("next"))
+    if current_customer():
+        return redirect(next_url or url_for("home"))
+
+    error = None
+    form = {"name": "", "email": ""}
+
+    if request.method == "POST":
+        name = request.form.get("name", "").strip()
+        email = request.form.get("email", "").strip().lower()
+        password = request.form.get("password", "")
+        confirm = request.form.get("confirm", "")
+        form = {"name": name, "email": email}
+
+        if not name:
+            error = "Please enter your name."
+        elif "@" not in email or "." not in email.split("@")[-1]:
+            error = "Please enter a valid email address."
+        elif len(password) < 8:
+            error = "Your password must have at least 8 characters."
+        elif password != confirm:
+            error = "The two passwords do not match."
+        else:
+            db = get_db()
+            try:
+                cur = db.execute(
+                    "INSERT INTO customers (name, email, password_hash, created_at) VALUES (?, ?, ?, ?)",
+                    (
+                        name,
+                        email,
+                        generate_password_hash(password, method="pbkdf2:sha256"),
+                        datetime.now().isoformat(timespec="seconds"),
+                    ),
+                )
+                db.commit()
+            except sqlite3.IntegrityError:
+                db.rollback()
+                error = "An account with this email already exists. Try logging in."
+            else:
+                session["customer_id"] = cur.lastrowid
+                return redirect(next_url or url_for("home"))
+
+    return render_template("register.html", active="register", error=error, form=form, next_url=next_url)
+
+
+@app.route("/logout", methods=["POST"])
+def customer_logout():
+    session.pop("customer_id", None)
+    return redirect(url_for("home"))
 
 
 # ---------- Admin login ----------
@@ -108,7 +218,6 @@ def admin_login():
         pass_ok = hmac.compare_digest(password.encode(), ADMIN_PASSWORD.encode())
 
         if email_ok and pass_ok:
-            session.clear()
             session["admin"] = True
             return redirect(url_for("admin_bookings"))
         error = "Wrong email or password."
@@ -118,7 +227,7 @@ def admin_login():
 
 @app.route("/admin/logout", methods=["POST"])
 def admin_logout():
-    session.clear()
+    session.pop("admin", None)
     return redirect(url_for("home"))
 
 
@@ -126,7 +235,7 @@ def admin_logout():
 
 @app.context_processor
 def inject_globals():
-    return {"company": COMPANY}
+    return {"company": COMPANY, "current_customer": current_customer()}
 
 
 @app.route("/")
@@ -141,11 +250,14 @@ def experiences():
 
 @app.route("/book", methods=["GET", "POST"])
 def book():
+    customer = current_customer()
     error = None
 
     if request.method == "POST":
-        name = request.form.get("name", "").strip()
-        email = request.form.get("email", "").strip()
+        # Server side check: nobody can book without an account
+        if customer is None:
+            return redirect(url_for("customer_login", next=url_for("book")))
+
         experience = request.form.get("experience", "").strip()
         date = request.form.get("date", "").strip()
         try:
@@ -155,7 +267,7 @@ def book():
 
         valid_names = [e["name"] for e in EXPERIENCES]
 
-        if not name or not email or not date or guests < 1 or experience not in valid_names:
+        if not date or guests < 1 or experience not in valid_names:
             error = "Please fill in all fields correctly."
         else:
             db = get_db()
@@ -168,9 +280,17 @@ def book():
                 error = f"Sorry, only {chosen['remaining']} spots are left for {experience}."
             else:
                 db.execute(
-                    "INSERT INTO bookings (name, email, experience, date, guests, created_at, status) "
-                    "VALUES (?, ?, ?, ?, ?, ?, 'confirmed')",
-                    (name, email, experience, date, guests, datetime.now().isoformat(timespec="seconds")),
+                    "INSERT INTO bookings (name, email, experience, date, guests, created_at, status, customer_id) "
+                    "VALUES (?, ?, ?, ?, ?, ?, 'confirmed', ?)",
+                    (
+                        customer["name"],
+                        customer["email"],
+                        experience,
+                        date,
+                        guests,
+                        datetime.now().isoformat(timespec="seconds"),
+                        customer["id"],
+                    ),
                 )
                 db.commit()
                 # Redirect so a page refresh does not send the form twice

@@ -6,6 +6,7 @@
   <title>{% block title %}{{ company }}{% endblock %}</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
   <link rel="stylesheet" href="{{ url_for('static', filename='admin.css') }}" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='customer.css') }}" />
 </head>
 <body>
   <header class="site-header">
@@ -15,6 +16,18 @@
       <a href="{{ url_for('experiences') }}" class="{{ 'active' if active == 'experiences' }}">Experiences</a>
       <a href="{{ url_for('book') }}" class="{{ 'active' if active == 'book' }}">Book now</a>
       <a href="{{ url_for('contact') }}" class="{{ 'active' if active == 'contact' }}">Contact us</a>
+
+      <span class="nav-account">
+        {% if current_customer %}
+          <span class="nav-user">Hi, {{ current_customer.name.split(' ')[0] }}</span>
+          <form method="post" action="{{ url_for('customer_logout') }}" class="inline-form">
+            <button type="submit" class="nav-button">Log out</button>
+          </form>
+        {% else %}
+          <a href="{{ url_for('customer_login') }}" class="{{ 'active' if active == 'login' }}">Log in</a>
+          <a href="{{ url_for('customer_register') }}" class="{{ 'active' if active == 'register' }}">Sign up</a>
+        {% endif %}
+      </span>
     </nav>
   </header>
 
@@ -27,7 +40,7 @@
     {% if session.get('admin') %}
       <a class="footer-link" href="{{ url_for('admin_bookings') }}">Bookings (admin)</a>
       <form method="post" action="{{ url_for('admin_logout') }}" class="inline-form">
-        <button type="submit" class="link-button">Log out</button>
+        <button type="submit" class="link-button">Admin log out</button>
       </form>
     {% else %}
       <a class="footer-link" href="{{ url_for('admin_login') }}">Admin login</a>

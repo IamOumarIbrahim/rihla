@@ -10,13 +10,10 @@
 <p class="notice error">{{ error }}</p>
 {% endif %}
 
+{% if current_customer %}
+<p class="account-note">Booking as <strong>{{ current_customer.name }}</strong> ({{ current_customer.email }})</p>
+
 <form method="post" class="form">
-  <label>Full name
-    <input type="text" name="name" required />
-  </label>
-  <label>Email
-    <input type="email" name="email" required />
-  </label>
   <label>Experience
     <select name="experience">
       {% for e in experiences %}
@@ -34,4 +31,12 @@
   </label>
   <button class="btn" type="submit">Send booking request</button>
 </form>
+{% else %}
+<div class="card login-prompt">
+  <h3>Please log in to book</h3>
+  <p>You can look at all our experiences without an account, but you need to log in to make a booking.</p>
+  <a class="btn" href="{{ url_for('customer_login', next=url_for('book')) }}">Log in</a>
+  <a class="btn secondary" href="{{ url_for('customer_register', next=url_for('book')) }}">Create account</a>
+</div>
+{% endif %}
 {% endblock %}
