@@ -17,14 +17,14 @@
   <label>Experience
     <select name="experience">
       {% for e in experiences %}
-      <option value="{{ e.name }}" {% if e.remaining == 0 %}disabled{% endif %}>
+      <option value="{{ e.name }}" {% if e.remaining == 0 %}disabled{% elif e.name == selected_experience %}selected{% endif %}>
         {{ e.name }} ({% if e.remaining == 0 %}sold out{% else %}{{ e.remaining }} spots left{% endif %})
       </option>
       {% endfor %}
     </select>
   </label>
   <label>Date
-    <input type="date" name="date" required />
+    <input type="date" name="date" value="{{ selected_date or '' }}" required />
   </label>
   <label>Guests
     <input type="number" name="guests" min="1" value="1" required />
@@ -35,8 +35,8 @@
 <div class="card login-prompt">
   <h3>Please log in to book</h3>
   <p>You can look at all our experiences without an account, but you need to log in to make a booking.</p>
-  <a class="btn" href="{{ url_for('customer_login', next=url_for('book')) }}">Log in</a>
-  <a class="btn secondary" href="{{ url_for('customer_register', next=url_for('book')) }}">Create account</a>
+  <a class="btn" href="{{ url_for('customer_login', next=request.full_path.rstrip('?')) }}">Log in</a>
+  <a class="btn secondary" href="{{ url_for('customer_register', next=request.full_path.rstrip('?')) }}">Create account</a>
 </div>
 {% endif %}
 {% endblock %}

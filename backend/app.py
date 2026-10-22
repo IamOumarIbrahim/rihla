@@ -6,9 +6,11 @@ from functools import wraps
 from pathlib import Path
 
 from flask import (
-    Flask, flash, g, redirect, render_template, request, session, url_for,
+    Flask, abort, flash, g, redirect, render_template, request, session, url_for,
 )
 from werkzeug.security import check_password_hash, generate_password_hash
+
+from trips import TRIPS, availability_for, include_rows
 
 app = Flask(__name__)
 app.secret_key = os.environ.get("SECRET_KEY", "dev-secret-change-me")
@@ -21,12 +23,8 @@ DB_PATH = Path(__file__).parent / "rihla.db"
 ADMIN_EMAIL = os.environ.get("ADMIN_EMAIL", "admin@hotmail.com")
 ADMIN_PASSWORD = os.environ.get("ADMIN_PASSWORD", "admin1234")
 
-# Dummy data, replace later. "capacity" = max guests in total.
-EXPERIENCES = [
-    {"name": "Desert Sunset Safari", "description": "Dune driving, camel rides and a sunset dinner.", "price": "$120", "capacity": 20},
-    {"name": "Old Town Walking Tour", "description": "Discover local history, markets and hidden cafes.", "price": "$45", "capacity": 15},
-    {"name": "Coastal Boat Trip", "description": "Half day on the water with snorkelling and lunch.", "price": "$85", "capacity": 12},
-]
+# Trip data (details, photos, availability rules) lives in trips.py.
+EXPERIENCES = TRIPS
 
 
 # ---------- Database ----------
@@ -240,12 +238,26 @@ def inject_globals():
 
 @app.route("/")
 def home():
-    return render_template("home.html", active="home")
+    return render_template("home.html", active="home", experiences=get_experiences())
 
 
 @app.route("/experiences")
 def experiences():
     return render_template("experiences.html", active="experiences", experiences=get_experiences())
+
+
+@app.route("/experiences/<slug>")
+def experience_detail(slug):
+    trip = next((e for e in get_experiences() if e["slug"] == slug), None)
+    if trip is None:
+        abort(404)
+    return render_template(
+        "experience_detail.html",
+        active="experiences",
+        e=trip,
+        rows=include_rows(trip),
+        availability=availability_for(trip),
+    )
 
 
 @app.route("/book", methods=["GET", "POST"])
@@ -300,7 +312,15 @@ def book():
     if request.args.get("sent"):
         message = "Thank you! Your booking request was saved. We will contact you soon."
 
-    return render_template("book.html", active="book", experiences=get_experiences(), message=message, error=error)
+    return render_template(
+        "book.html",
+        active="book",
+        experiences=get_experiences(),
+        message=message,
+        error=error,
+        selected_experience=request.values.get("experience", ""),
+        selected_date=request.values.get("date", ""),
+    )
 
 
 @app.route("/contact")

@@ -1,0 +1,139 @@
+/* Experience pages. Uses only the three Rihla colors from rihla.css. */
+
+/* Cards on the experiences page */
+.exp-title-link { color: inherit; text-decoration: none; }
+.exp-title-link:hover { color: var(--tertiary); }
+.exp-card .exp-more { display: inline-block; margin-top: 14px; font-weight: 600; color: var(--main); text-decoration: none; border-bottom: 2px solid var(--tertiary); }
+.exp-card .exp-more:hover { color: var(--tertiary); }
+.exp-card .price { margin: 12px 0 0; }
+.price-unit { font-weight: 400; color: rgba(12, 22, 24, 0.7); }
+.card-actions { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+.card-actions .btn { padding: 8px 16px; font-size: 0.9rem; margin: 0; border: 2px solid var(--tertiary); }
+.card-actions .btn.secondary { background: transparent; border-color: var(--main); color: var(--main); }
+.card-actions .btn.secondary:hover { background: var(--main); color: var(--secondary); }
+
+/* Detail page: hero */
+.back-link { display: inline-block; margin-bottom: 16px; font-weight: 600; color: var(--main); text-decoration: none; }
+.back-link:hover { color: var(--tertiary); }
+
+.trip-hero { position: relative; margin: 0 0 24px; border-radius: 16px; overflow: hidden; background: var(--main); }
+.trip-hero img { display: block; width: 100%; aspect-ratio: 21 / 9; object-fit: cover; }
+.trip-hero figcaption {
+  position: absolute; left: 0; right: 0; bottom: 0;
+  padding: 56px 28px 24px;
+  color: var(--secondary);
+  background: linear-gradient(to top, rgba(12, 22, 24, 0.92), rgba(12, 22, 24, 0));
+}
+.trip-hero h1 { margin: 0 0 6px; font-size: clamp(1.8rem, 4vw, 2.6rem); color: var(--secondary); }
+.trip-hero .tagline { margin: 0 0 12px; color: rgba(242, 247, 248, 0.85); }
+.trip-chip { display: inline-block; padding: 4px 12px; border-radius: 999px; background: var(--tertiary); color: var(--main); font-size: 0.85rem; font-weight: 600; }
+
+/* Detail page: layout */
+.trip-layout { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 28px; align-items: start; }
+.trip-main section { margin-bottom: 36px; }
+.trip-main h2 { margin: 0 0 14px; padding-bottom: 8px; font-size: 1.4rem; border-bottom: 2px solid var(--tertiary); }
+.trip-side { align-self: stretch; }
+
+/* Quick facts */
+.facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin: 0 0 36px; }
+.fact { background: var(--main); color: var(--secondary); border-radius: 12px; padding: 14px 16px; }
+.fact dt { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--tertiary); }
+.fact dd { margin: 4px 0 0; font-weight: 600; }
+
+/* Highlights */
+.check-list { list-style: none; margin: 16px 0 0; padding: 0; display: grid; gap: 10px; }
+.check-list li { position: relative; padding-left: 30px; }
+.check-list li::before {
+  content: "\2713";
+  position: absolute; left: 0; top: 1px;
+  width: 20px; height: 20px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--tertiary); color: var(--main);
+  font-size: 0.8rem; font-weight: 700;
+}
+
+/* Timeline */
+.timeline { list-style: none; margin: 0; padding: 0 0 0 10px; border-left: 2px solid rgba(12, 22, 24, 0.2); }
+.timeline li { position: relative; padding: 0 0 18px 22px; }
+.timeline li::before {
+  content: "";
+  position: absolute; left: -17px; top: 6px;
+  width: 12px; height: 12px; border-radius: 50%;
+  background: var(--tertiary); border: 2px solid var(--secondary);
+}
+.timeline .when { display: block; font-size: 0.8rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; color: rgba(12, 22, 24, 0.7); }
+
+/* Included and not included table */
+.inc-table td { width: 50%; vertical-align: top; }
+.inc-table td.yes::before { content: "\2713"; margin-right: 8px; font-weight: 700; color: var(--tertiary); }
+.inc-table td.no::before { content: "\2715"; margin-right: 8px; font-weight: 700; color: rgba(12, 22, 24, 0.55); }
+
+/* Map */
+.map-box { border-radius: 12px; overflow: hidden; border: 1px solid rgba(12, 22, 24, 0.15); background: var(--main); }
+.map-box iframe { display: block; width: 100%; height: 300px; border: 0; }
+.map-meta { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin: 10px 0 0; font-size: 0.9rem; color: rgba(12, 22, 24, 0.7); }
+.map-meta a { color: var(--main); font-weight: 600; }
+
+/* Host */
+.host { display: grid; grid-template-columns: auto 1fr; gap: 18px; align-items: start; }
+.avatar { width: 56px; height: 56px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: var(--main); color: var(--tertiary); font-weight: 700; font-size: 1.15rem; }
+.host h3 { margin: 0; }
+.host-role { margin: 2px 0 0; color: rgba(12, 22, 24, 0.7); }
+.host dl { display: grid; grid-template-columns: 110px 1fr; gap: 6px 12px; margin: 14px 0 0; }
+.host dt { color: rgba(12, 22, 24, 0.7); }
+.host dd { margin: 0; }
+.host a { color: var(--main); font-weight: 600; }
+
+/* FAQ */
+.faq details { margin-bottom: 10px; border: 1px solid rgba(12, 22, 24, 0.15); border-radius: 10px; background: var(--secondary); }
+.faq summary { display: flex; justify-content: space-between; gap: 12px; padding: 14px 16px; font-weight: 600; cursor: pointer; list-style: none; }
+.faq summary::-webkit-details-marker { display: none; }
+.faq summary::after { content: "+"; font-size: 1.3rem; line-height: 1; color: var(--tertiary); }
+.faq details[open] summary::after { content: "\2212"; }
+.faq details p { margin: 0; padding: 0 16px 16px; }
+
+/* Booking card and calendar */
+.book-card { position: sticky; top: 16px; padding: 20px; }
+.book-card h3 { margin: 16px 0 8px; }
+.price-line { display: flex; align-items: baseline; justify-content: space-between; margin: 0; }
+.price-big { font-size: 1.7rem; font-weight: 700; }
+.book-card .btn { display: block; width: 100%; text-align: center; }
+
+.cal-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+.cal-title { font-weight: 700; }
+.cal-nav { width: 32px; height: 32px; border-radius: 8px; border: 1px solid rgba(12, 22, 24, 0.25); background: transparent; color: var(--main); font-size: 1.1rem; line-height: 1; cursor: pointer; }
+.cal-nav:hover:not(:disabled) { background: var(--main); color: var(--secondary); }
+.cal-nav:disabled { opacity: 0.35; cursor: default; }
+
+.cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+.cal-dow { padding: 4px 0; text-align: center; font-size: 0.7rem; letter-spacing: 0.05em; text-transform: uppercase; color: rgba(12, 22, 24, 0.6); }
+.cal-day {
+  position: relative; aspect-ratio: 1; padding: 0;
+  display: flex; align-items: center; justify-content: center;
+  border: 1px solid transparent; border-radius: 8px;
+  background: transparent; color: rgba(12, 22, 24, 0.35);
+  font: inherit; font-size: 0.9rem; cursor: default;
+}
+.cal-day.blank { visibility: hidden; }
+.cal-day.today { border-color: rgba(12, 22, 24, 0.4); color: var(--main); }
+.cal-day.available, .cal-day.limited { background: rgba(202, 127, 69, 0.2); border-color: rgba(202, 127, 69, 0.6); color: var(--main); font-weight: 700; cursor: pointer; }
+.cal-day.available:hover, .cal-day.limited:hover { background: var(--tertiary); }
+.cal-day.limited::after { content: ""; position: absolute; bottom: 4px; width: 4px; height: 4px; border-radius: 50%; background: var(--main); }
+.cal-day.selected, .cal-day.selected:hover { background: var(--main); border-color: var(--main); color: var(--secondary); }
+.cal-day.selected::after { background: var(--tertiary); }
+
+.cal-legend { display: flex; flex-wrap: wrap; gap: 6px 14px; margin-top: 12px; font-size: 0.78rem; color: rgba(12, 22, 24, 0.75); }
+.cal-legend span { display: inline-flex; align-items: center; gap: 6px; }
+.swatch { position: relative; display: inline-block; width: 14px; height: 14px; border-radius: 4px; border: 1px solid rgba(12, 22, 24, 0.2); }
+.swatch.available { background: rgba(202, 127, 69, 0.2); border-color: rgba(202, 127, 69, 0.6); }
+.swatch.limited { background: rgba(202, 127, 69, 0.2); border-color: rgba(202, 127, 69, 0.6); }
+.swatch.limited::after { content: ""; position: absolute; left: 50%; bottom: 2px; width: 3px; height: 3px; margin-left: -1.5px; border-radius: 50%; background: var(--main); }
+.swatch.off { background: transparent; }
+.cal-summary { margin: 14px 0; font-weight: 600; }
+
+@media (max-width: 860px) {
+  .trip-layout { grid-template-columns: 1fr; }
+  .trip-side { order: -1; }
+  .book-card { position: static; }
+  .host { grid-template-columns: 1fr; }
+}

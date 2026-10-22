@@ -2,20 +2,29 @@
 {% block title %}Experiences | {{ company }}{% endblock %}
 {% block content %}
 <h1>Experiences</h1>
-<section class="cards">
+<section class="cards experience-cards">
   {% for e in experiences %}
-  <div class="card">
-    <h3>{{ e.name }}</h3>
-    <p>{{ e.description }}</p>
-    <p class="price">{{ e.price }}</p>
-    <p class="spots">{{ e.remaining }} of {{ e.capacity }} spots left</p>
-    {% if e.remaining == 0 %}
-    <span class="badge soldout">Sold out</span>
-    {% elif current_customer %}
-    <a class="btn small" href="{{ url_for('book') }}">Book now</a>
-    {% else %}
-    <a class="btn small" href="{{ url_for('customer_login', next=url_for('book')) }}">Log in to book</a>
-    {% endif %}
+  <div class="card exp-card">
+    <a href="{{ url_for('experience_detail', slug=e.slug) }}">
+      <img src="{{ url_for('static', filename='images/' ~ e.image) }}" alt="{{ e.name }}" />
+    </a>
+    <div class="exp-body">
+      <h3><a class="exp-title-link" href="{{ url_for('experience_detail', slug=e.slug) }}">{{ e.name }}</a></h3>
+      <p class="exp-desc">{{ e.description }}</p>
+      <p class="exp-location">{{ e.location }}</p>
+      <p class="price">{{ e.price }} <span class="price-unit">{{ e.price_unit }}</span></p>
+      <p class="spots">{{ e.remaining }} of {{ e.capacity }} spots left</p>
+      <div class="card-actions">
+        <a class="btn small" href="{{ url_for('experience_detail', slug=e.slug) }}">View details</a>
+        {% if e.remaining == 0 %}
+        <span class="badge soldout">Sold out</span>
+        {% elif current_customer %}
+        <a class="btn small secondary" href="{{ url_for('book', experience=e.name) }}">Book now</a>
+        {% else %}
+        <a class="btn small secondary" href="{{ url_for('customer_login', next=url_for('book', experience=e.name)) }}">Log in to book</a>
+        {% endif %}
+      </div>
+    </div>
   </div>
   {% endfor %}
 </section>
