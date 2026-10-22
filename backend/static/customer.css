@@ -1,11 +1,11 @@
 .nav-account {
   margin-left: 24px;
   padding-left: 24px;
-  border-left: 1px solid rgba(255, 255, 255, 0.3);
+  border-left: 1px solid rgba(242, 247, 248, 0.3);
 }
 
 .nav-user {
-  color: #d9e8ec;
+  color: rgba(12, 22, 24, 0.15);
   margin-left: 20px;
 }
 
@@ -16,27 +16,27 @@
   border: none;
   border-bottom: 2px solid transparent;
   padding: 0 0 4px;
-  color: #d9e8ec;
+  color: rgba(12, 22, 24, 0.15);
   font: inherit;
   cursor: pointer;
 }
 .nav-button:hover {
-  color: #fff;
-  border-bottom-color: #f4a259;
+  color: #f2f7f8;
+  border-bottom-color: #ca7f45;
 }
 
 .btn.secondary {
   background: transparent;
-  color: #0f4c5c;
-  border: 2px solid #0f4c5c;
+  color: #0c1618;
+  border: 2px solid #0c1618;
   padding: 10px 22px;
   margin-left: 8px;
 }
-.btn.secondary:hover { background: #0f4c5c; color: #fff; }
+.btn.secondary:hover { background: #0c1618; color: #f2f7f8; }
 
 .login-prompt { max-width: 520px; }
 
-.account-note { color: #4b5563; margin-bottom: 20px; }
+.account-note { color: rgba(12, 22, 24, 0.8); margin-bottom: 20px; }
 
-.hint { margin-top: 20px; color: #4b5563; }
-.hint a { color: #0f4c5c; font-weight: 600; }
+.hint { margin-top: 20px; color: rgba(12, 22, 24, 0.8); }
+.hint a { color: #0c1618; font-weight: 600; }

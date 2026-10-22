@@ -3,22 +3,38 @@
 {% block content %}
 <section class="hero">
   <h1>Welcome to {{ company }}</h1>
-  <p>Discover unforgettable journeys and local experiences. This is dummy text, replace it later.</p>
-  <a class="btn" href="{{ url_for('book') }}">Book now</a>
+  <p class="hero-tagline">Experience tourism the way it was meant to feel.</p>
+  <p class="hero-sub">Book any tourism experience with trusted local operators, all in one place.</p>
+  <div class="hero-actions">
+    <a class="btn" href="{{ url_for('book') }}">Book your adventure</a>
+    <a class="btn secondary" href="{{ url_for('contact') }}">Reach out to us</a>
+  </div>
 </section>
 
-<section class="cards">
-  <div class="card">
-    <h3>Local guides</h3>
-    <p>Dummy text about your friendly and expert guides.</p>
+<section class="cards experience-cards">
+  <div class="card exp-card">
+    <img src="{{ url_for('static', filename='images/desert-safari.jpg') }}" alt="Desert Safari Adventure" />
+    <div class="exp-body">
+      <h3>Desert Safari Adventure</h3>
+      <p class="exp-desc">Dune bashing, camel rides, and a BBQ dinner under the stars</p>
+      <p class="exp-location">Dubai, DU, United Arab Emirates</p>
+    </div>
   </div>
-  <div class="card">
-    <h3>Small groups</h3>
-    <p>Dummy text about comfortable and personal trips.</p>
+  <div class="card exp-card">
+    <img src="{{ url_for('static', filename='images/yacht-charter.jpg') }}" alt="Yacht Charter Experience" />
+    <div class="exp-body">
+      <h3>Yacht Charter Experience</h3>
+      <p class="exp-desc">Cruise the marina in style aboard a private luxury yacht</p>
+      <p class="exp-location">Dubai, DU, United Arab Emirates</p>
+    </div>
   </div>
-  <div class="card">
-    <h3>Best prices</h3>
-    <p>Dummy text about fair and clear pricing.</p>
+  <div class="card exp-card">
+    <img src="{{ url_for('static', filename='images/dhow-cruise.jpg') }}" alt="Dhow Cruise - Dinner" />
+    <div class="exp-body">
+      <h3>Dhow Cruise &ndash; Dinner</h3>
+      <p class="exp-desc">Sail Dubai Creek at sunset with a traditional dinner and live entertainment</p>
+      <p class="exp-location">Dubai, DU, United Arab Emirates</p>
+    </div>
   </div>
 </section>
 {% endblock %}

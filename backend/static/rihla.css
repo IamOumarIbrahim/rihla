@@ -1,0 +1,58 @@
+/* Rihla theme: only three colors are used, plus transparent tints of them. */
+:root {
+  --main: #0c1618;
+  --secondary: #f2f7f8;
+  --tertiary: #ca7f45;
+}
+
+body { background: var(--secondary); color: var(--main); }
+
+.card { background: var(--secondary); border: 1px solid rgba(12, 22, 24, 0.15); }
+
+/* Hero */
+.hero { background: var(--main); color: var(--secondary); text-align: center; padding: 72px 24px; }
+.hero h1 { color: var(--secondary); margin: 0 0 16px; }
+.hero .hero-tagline {
+  font-size: clamp(1.4rem, 3vw, 2rem);
+  font-weight: 600;
+  color: var(--tertiary);
+  max-width: 760px;
+  margin: 0 auto 12px;
+}
+.hero .hero-sub {
+  font-size: 1rem;
+  color: rgba(242, 247, 248, 0.8);
+  max-width: 620px;
+  margin: 0 auto 28px;
+}
+.hero-actions { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+
+.hero .btn { background: var(--tertiary); color: var(--main); border: 2px solid var(--tertiary); text-decoration: none; }
+.hero .btn:hover { background: transparent; color: var(--tertiary); }
+.hero .btn.secondary { background: transparent; color: var(--secondary); border-color: var(--secondary); }
+.hero .btn.secondary:hover { background: var(--secondary); color: var(--main); }
+
+/* Danger buttons (refund/delete): outlined accent instead of red */
+.btn.danger { background: transparent; color: var(--main); border: 2px solid var(--tertiary); }
+.btn.danger:hover { background: var(--tertiary); color: var(--main); }
+
+/* Experience cards on the home page */
+.experience-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 24px; }
+.card.exp-card { padding: 0; overflow: hidden; display: flex; flex-direction: column; }
+.exp-card img { width: 100%; aspect-ratio: 3 / 2; object-fit: cover; display: block; background: var(--main); }
+.exp-body { padding: 20px; }
+.exp-card h3 { margin: 0 0 8px; }
+.exp-card .exp-desc { margin: 0 0 14px; }
+.exp-card .exp-location { margin: 0; font-size: 0.9rem; font-weight: 600; color: rgba(12, 22, 24, 0.75); }
+.exp-card .exp-location::before {
+  content: "";
+  display: inline-block;
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--tertiary);
+  margin-right: 8px;
+}
+
+/* About us on the contact page */
+.card.about { margin-top: 24px; }
+.card.about h2 { margin-top: 0; }
