@@ -1,0 +1,409 @@
+=== FILES ===
+index.html
+main.js
+preload.js
+backend\static\admin.css
+backend\static\customer.css
+backend\static\style.css
+backend\templates\admin_bookings.html
+backend\templates\admin_login.html
+backend\templates\base.html
+backend\templates\book.html
+backend\templates\contact.html
+backend\templates\experiences.html
+backend\templates\home.html
+backend\templates\login.html
+backend\templates\register.html
+
+=== KEY STRING HITS ===
+backend\templates\base.html:17: <a href="{{ url_for('book') }}" class="{{ 'active' if active == 'book' }}">Book now</a>
+backend\templates\base.html:18: <a href="{{ url_for('contact') }}" class="{{ 'active' if active == 'contact' }}">Contact us</a>
+backend\templates\book.html:2: {% block title %}Book now | {{ company }}{% endblock %}
+backend\templates\book.html:4: <h1>Book now</h1>
+backend\templates\contact.html:2: {% block title %}Contact us | {{ company }}{% endblock %}
+backend\templates\contact.html:4: <h1>Contact us</h1>
+backend\templates\experiences.html:15: <a class="btn small" href="{{ url_for('book') }}">Book now</a>
+backend\templates\home.html:6: <p>Discover unforgettable journeys and local experiences. This is dummy text, replace it later.</p>
+backend\templates\home.html:7: <a class="btn" href="{{ url_for('book') }}">Book now</a>
+backend\templates\home.html:12: <h3>Local guides</h3>
+backend\templates\home.html:13: <p>Dummy text about your friendly and expert guides.</p>
+backend\templates\home.html:16: <h3>Small groups</h3>
+backend\templates\home.html:17: <p>Dummy text about comfortable and personal trips.</p>
+backend\templates\home.html:20: <h3>Best prices</h3>
+backend\templates\home.html:21: <p>Dummy text about fair and clear pricing.</p>
+
+=== NAVIGATION / ROUTING ===
+main.js:49: win.loadURL(BACKEND_URL)
+main.js:52: win.loadURL('data:text/html;charset=utf-8,' + encodeURIComponent(html))
+backend\templates\base.html:7: <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+backend\templates\base.html:8: <link rel="stylesheet" href="{{ url_for('static', filename='admin.css') }}" />
+backend\templates\base.html:9: <link rel="stylesheet" href="{{ url_for('static', filename='customer.css') }}" />
+backend\templates\base.html:13: <a class="logo" href="{{ url_for('home') }}">{{ company }}</a>
+backend\templates\base.html:15: <a href="{{ url_for('home') }}" class="{{ 'active' if active == 'home' }}">Home</a>
+backend\templates\base.html:16: <a href="{{ url_for('experiences') }}" class="{{ 'active' if active == 'experiences' }}">Experiences</a>
+backend\templates\base.html:17: <a href="{{ url_for('book') }}" class="{{ 'active' if active == 'book' }}">Book now</a>
+backend\templates\base.html:18: <a href="{{ url_for('contact') }}" class="{{ 'active' if active == 'contact' }}">Contact us</a>
+backend\templates\base.html:27: <a href="{{ url_for('customer_login') }}" class="{{ 'active' if active == 'login' }}">Log in</a>
+backend\templates\base.html:28: <a href="{{ url_for('customer_register') }}" class="{{ 'active' if active == 'register' }}">Sign up</a>
+backend\templates\base.html:41: <a class="footer-link" href="{{ url_for('admin_bookings') }}">Bookings (admin)</a>
+backend\templates\base.html:46: <a class="footer-link" href="{{ url_for('admin_login') }}">Admin login</a>
+backend\templates\book.html:38: <a class="btn" href="{{ url_for('customer_login', next=url_for('book')) }}">Log in</a>
+backend\templates\book.html:39: <a class="btn secondary" href="{{ url_for('customer_register', next=url_for('book')) }}">Create account</a>
+backend\templates\experiences.html:15: <a class="btn small" href="{{ url_for('book') }}">Book now</a>
+backend\templates\experiences.html:17: <a class="btn small" href="{{ url_for('customer_login', next=url_for('book')) }}">Log in to book</a>
+backend\templates\home.html:7: <a class="btn" href="{{ url_for('book') }}">Book now</a>
+backend\templates\login.html:24: <p class="hint">New here? <a href="{{ url_for('customer_register', next=next_url) }}">Create an account</a></p>
+backend\templates\register.html:27: <p class="hint">Already have an account? <a href="{{ url_for('customer_login', next=next_url) }}">Log in</a></p>
+
+=== COLORS USED IN CSS ===
+8x  #fff
+7x  #0f4c5c
+4x  #6b7280
+3x  #1f2937
+3x  #f4a259
+3x  #d9e8ec
+2x  #4b5563
+2x  #fdecea
+2x  rgba(0, 0, 0, 0.08)
+2x  #e6f4ea
+1x  #fff3cd
+1x  #faf7f2
+1x  #f5b5ae
+1x  #e8913f
+1x  #e5534b
+1x  #cbd5e1
+1x  #c9423b
+1x  #a7d7b3
+1x  #a12a1f
+1x  #8a6200
+1x  #1e6b34
+1x  #e5e7eb
+1x  rgba(255, 255, 255, 0.3)
+
+=== HTML FILES (full) ===
+--- index.html ---
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'" />
+    <title>My Electron App</title>
+  </head>
+  <body>
+    <h1>Hello from Electron</h1>
+  </body>
+</html>
+--- admin_bookings.html ---
+{% extends "base.html" %}
+{% block title %}Bookings | {{ company }}{% endblock %}
+{% block content %}
+<h1>Bookings</h1>
+
+{% for m in get_flashed_messages() %}
+<p class="notice">{{ m }}</p>
+{% endfor %}
+
+<h2>Capacity</h2>
+<div class="table-wrap">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Experience</th>
+        <th>Capacity</th>
+        <th>Booked</th>
+        <th>Remaining</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for e in experiences %}
+      <tr>
+        <td>{{ e.name }}</td>
+        <td>{{ e.capacity }}</td>
+        <td>{{ e.booked }}</td>
+        <td>{{ e.remaining }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<h2>All bookings</h2>
+{% if bookings %}
+<div class="table-wrap">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Experience</th>
+        <th>Date</th>
+        <th>Guests</th>
+        <th>Status</th>
+        <th>Received</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for b in bookings %}
+      <tr>
+        <td>{{ b.id }}</td>
+        <td>{{ b.name }}</td>
+        <td>{{ b.email }}</td>
+        <td>{{ b.experience }}</td>
+        <td>{{ b.date }}</td>
+        <td>{{ b.guests }}</td>
+        <td><span class="badge {{ b.status }}">{{ b.status }}</span></td>
+        <td>{{ b.created_at }}</td>
+        <td>
+          <div class="actions">
+            {% if b.status == 'confirmed' %}
+            <form method="post" action="{{ url_for('refund_booking', booking_id=b.id) }}"
+                  onsubmit="return confirm('Refund booking number {{ b.id }}?');">
+              <button class="btn small" type="submit">Refund</button>
+            </form>
+            {% endif %}
+            <form method="post" action="{{ url_for('delete_booking', booking_id=b.id) }}"
+                  onsubmit="return confirm('Delete booking number {{ b.id }}? This cannot be undone.');">
+              <button class="btn small danger" type="submit">Delete</button>
+            </form>
+          </div>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% else %}
+<p>No bookings yet.</p>
+{% endif %}
+{% endblock %}
+--- admin_login.html ---
+{% extends "base.html" %}
+{% block title %}Admin login | {{ company }}{% endblock %}
+{% block content %}
+<h1>Admin login</h1>
+
+{% if error %}
+<p class="notice error">{{ error }}</p>
+{% endif %}
+
+<form method="post" class="form">
+  <label>Email
+    <input type="email" name="email" required autofocus />
+  </label>
+  <label>Password
+    <input type="password" name="password" required />
+  </label>
+  <button class="btn" type="submit">Log in</button>
+</form>
+{% endblock %}
+--- base.html ---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{% block title %}{{ company }}{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='admin.css') }}" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='customer.css') }}" />
+</head>
+<body>
+  <header class="site-header">
+    <a class="logo" href="{{ url_for('home') }}">{{ company }}</a>
+    <nav>
+      <a href="{{ url_for('home') }}" class="{{ 'active' if active == 'home' }}">Home</a>
+      <a href="{{ url_for('experiences') }}" class="{{ 'active' if active == 'experiences' }}">Experiences</a>
+      <a href="{{ url_for('book') }}" class="{{ 'active' if active == 'book' }}">Book now</a>
+      <a href="{{ url_for('contact') }}" class="{{ 'active' if active == 'contact' }}">Contact us</a>
+
+      <span class="nav-account">
+        {% if current_customer %}
+          <span class="nav-user">Hi, {{ current_customer.name.split(' ')[0] }}</span>
+          <form method="post" action="{{ url_for('customer_logout') }}" class="inline-form">
+            <button type="submit" class="nav-button">Log out</button>
+          </form>
+        {% else %}
+          <a href="{{ url_for('customer_login') }}" class="{{ 'active' if active == 'login' }}">Log in</a>
+          <a href="{{ url_for('customer_register') }}" class="{{ 'active' if active == 'register' }}">Sign up</a>
+        {% endif %}
+      </span>
+    </nav>
+  </header>
+
+  <main>
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="site-footer">
+    &copy; 2026 {{ company }}. All rights reserved.
+    {% if session.get('admin') %}
+      <a class="footer-link" href="{{ url_for('admin_bookings') }}">Bookings (admin)</a>
+      <form method="post" action="{{ url_for('admin_logout') }}" class="inline-form">
+        <button type="submit" class="link-button">Admin log out</button>
+      </form>
+    {% else %}
+      <a class="footer-link" href="{{ url_for('admin_login') }}">Admin login</a>
+    {% endif %}
+  </footer>
+</body>
+</html>
+--- book.html ---
+{% extends "base.html" %}
+{% block title %}Book now | {{ company }}{% endblock %}
+{% block content %}
+<h1>Book now</h1>
+
+{% if message %}
+<p class="notice">{{ message }}</p>
+{% endif %}
+{% if error %}
+<p class="notice error">{{ error }}</p>
+{% endif %}
+
+{% if current_customer %}
+<p class="account-note">Booking as <strong>{{ current_customer.name }}</strong> ({{ current_customer.email }})</p>
+
+<form method="post" class="form">
+  <label>Experience
+    <select name="experience">
+      {% for e in experiences %}
+      <option value="{{ e.name }}" {% if e.remaining == 0 %}disabled{% endif %}>
+        {{ e.name }} ({% if e.remaining == 0 %}sold out{% else %}{{ e.remaining }} spots left{% endif %})
+      </option>
+      {% endfor %}
+    </select>
+  </label>
+  <label>Date
+    <input type="date" name="date" required />
+  </label>
+  <label>Guests
+    <input type="number" name="guests" min="1" value="1" required />
+  </label>
+  <button class="btn" type="submit">Send booking request</button>
+</form>
+{% else %}
+<div class="card login-prompt">
+  <h3>Please log in to book</h3>
+  <p>You can look at all our experiences without an account, but you need to log in to make a booking.</p>
+  <a class="btn" href="{{ url_for('customer_login', next=url_for('book')) }}">Log in</a>
+  <a class="btn secondary" href="{{ url_for('customer_register', next=url_for('book')) }}">Create account</a>
+</div>
+{% endif %}
+{% endblock %}
+--- contact.html ---
+{% extends "base.html" %}
+{% block title %}Contact us | {{ company }}{% endblock %}
+{% block content %}
+<h1>Contact us</h1>
+<section class="card">
+  <p><strong>Email:</strong> hello@rihla.example</p>
+  <p><strong>Phone:</strong> +000 000 000 000</p>
+  <p><strong>Address:</strong> 123 Example Street, Example City</p>
+  <p><strong>Hours:</strong> Mon to Sat, 9:00 to 18:00</p>
+</section>
+{% endblock %}
+--- experiences.html ---
+{% extends "base.html" %}
+{% block title %}Experiences | {{ company }}{% endblock %}
+{% block content %}
+<h1>Experiences</h1>
+<section class="cards">
+  {% for e in experiences %}
+  <div class="card">
+    <h3>{{ e.name }}</h3>
+    <p>{{ e.description }}</p>
+    <p class="price">{{ e.price }}</p>
+    <p class="spots">{{ e.remaining }} of {{ e.capacity }} spots left</p>
+    {% if e.remaining == 0 %}
+    <span class="badge soldout">Sold out</span>
+    {% elif current_customer %}
+    <a class="btn small" href="{{ url_for('book') }}">Book now</a>
+    {% else %}
+    <a class="btn small" href="{{ url_for('customer_login', next=url_for('book')) }}">Log in to book</a>
+    {% endif %}
+  </div>
+  {% endfor %}
+</section>
+{% endblock %}
+--- home.html ---
+{% extends "base.html" %}
+{% block title %}Home | {{ company }}{% endblock %}
+{% block content %}
+<section class="hero">
+  <h1>Welcome to {{ company }}</h1>
+  <p>Discover unforgettable journeys and local experiences. This is dummy text, replace it later.</p>
+  <a class="btn" href="{{ url_for('book') }}">Book now</a>
+</section>
+
+<section class="cards">
+  <div class="card">
+    <h3>Local guides</h3>
+    <p>Dummy text about your friendly and expert guides.</p>
+  </div>
+  <div class="card">
+    <h3>Small groups</h3>
+    <p>Dummy text about comfortable and personal trips.</p>
+  </div>
+  <div class="card">
+    <h3>Best prices</h3>
+    <p>Dummy text about fair and clear pricing.</p>
+  </div>
+</section>
+{% endblock %}
+--- login.html ---
+{% extends "base.html" %}
+{% block title %}Log in | {{ company }}{% endblock %}
+{% block content %}
+<h1>Log in</h1>
+
+{% if next_url %}
+<p class="notice">Please log in to continue.</p>
+{% endif %}
+{% if error %}
+<p class="notice error">{{ error }}</p>
+{% endif %}
+
+<form method="post" class="form">
+  <input type="hidden" name="next" value="{{ next_url or '' }}" />
+  <label>Email
+    <input type="email" name="email" required autofocus />
+  </label>
+  <label>Password
+    <input type="password" name="password" required />
+  </label>
+  <button class="btn" type="submit">Log in</button>
+</form>
+
+<p class="hint">New here? <a href="{{ url_for('customer_register', next=next_url) }}">Create an account</a></p>
+{% endblock %}
+--- register.html ---
+{% extends "base.html" %}
+{% block title %}Sign up | {{ company }}{% endblock %}
+{% block content %}
+<h1>Create your account</h1>
+
+{% if error %}
+<p class="notice error">{{ error }}</p>
+{% endif %}
+
+<form method="post" class="form">
+  <input type="hidden" name="next" value="{{ next_url or '' }}" />
+  <label>Full name
+    <input type="text" name="name" value="{{ form.name }}" required autofocus />
+  </label>
+  <label>Email
+    <input type="email" name="email" value="{{ form.email }}" required />
+  </label>
+  <label>Password (at least 8 characters)
+    <input type="password" name="password" minlength="8" required />
+  </label>
+  <label>Repeat password
+    <input type="password" name="confirm" minlength="8" required />
+  </label>
+  <button class="btn" type="submit">Sign up</button>
+</form>
+
+<p class="hint">Already have an account? <a href="{{ url_for('customer_login', next=next_url) }}">Log in</a></p>
+{% endblock %}

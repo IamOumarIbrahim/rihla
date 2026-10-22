@@ -1,4 +1,4 @@
-.spots { color: #6b7280; margin: 4px 0 12px; }
+.spots { color: rgba(12, 22, 24, 0.7); margin: 4px 0 12px; }
 
 .badge {
   display: inline-block;
@@ -7,15 +7,15 @@
   font-size: 0.85rem;
   font-weight: 600;
 }
-.badge.confirmed { background: #e6f4ea; color: #1e6b34; }
-.badge.refunded { background: #fff3cd; color: #8a6200; }
-.badge.soldout { background: #fdecea; color: #a12a1f; }
+.badge.confirmed { background: rgba(12, 22, 24, 0.08); color: #0c1618; }
+.badge.refunded { background: rgba(202, 127, 69, 0.12); color: #0c1618; }
+.badge.soldout { background: rgba(202, 127, 69, 0.18); color: #0c1618; }
 
 .actions { display: flex; gap: 6px; }
 .actions form { margin: 0; }
 
-.btn.danger { background: #e5534b; color: #fff; }
-.btn.danger:hover { background: #c9423b; }
+.btn.danger { background: #ca7f45; color: #f2f7f8; }
+.btn.danger:hover { background: #ca7f45; }
 
 .inline-form { display: inline; margin-left: 12px; }
 
@@ -23,11 +23,11 @@
   background: none;
   border: none;
   padding: 0;
-  color: #6b7280;
+  color: rgba(12, 22, 24, 0.7);
   font: inherit;
   text-decoration: underline;
   cursor: pointer;
 }
-.link-button:hover { color: #1f2937; }
+.link-button:hover { color: #0c1618; }
 
 h2 { margin-top: 32px; }
