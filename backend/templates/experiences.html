@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}Experiences | {{ company }}{% endblock %}
+{% block content %}
+<h1>Experiences</h1>
+<section class="cards">
+  {% for e in experiences %}
+  <div class="card">
+    <h3>{{ e.name }}</h3>
+    <p>{{ e.description }}</p>
+    <p class="price">{{ e.price }}</p>
+    <p class="spots">{{ e.remaining }} of {{ e.capacity }} spots left</p>
+    {% if e.remaining > 0 %}
+    <a class="btn small" href="{{ url_for('book') }}">Book now</a>
+    {% else %}
+    <span class="badge soldout">Sold out</span>
+    {% endif %}
+  </div>
+  {% endfor %}
+</section>
+{% endblock %}

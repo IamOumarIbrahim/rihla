@@ -1,0 +1,31 @@
+# Dependencies
+node_modules/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Database (can contain customer data)
+*.db
+*.sqlite
+*.sqlite3
+
+# Secrets and local settings
+.env
+.env.*
+
+# Build output
+dist/
+out/
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS and editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
