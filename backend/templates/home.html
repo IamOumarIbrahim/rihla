@@ -12,29 +12,18 @@
 </section>
 
 <section class="cards experience-cards">
+  {% for e in experiences %}
   <div class="card exp-card">
-    <img src="{{ url_for('static', filename='images/desert-safari.jpg') }}" alt="Desert Safari Adventure" />
+    <a href="{{ url_for('experience_detail', slug=e.slug) }}">
+      <img src="{{ url_for('static', filename='images/' ~ e.image) }}" alt="{{ e.name }}" />
+    </a>
     <div class="exp-body">
-      <h3>Desert Safari Adventure</h3>
-      <p class="exp-desc">Dune bashing, camel rides, and a BBQ dinner under the stars</p>
-      <p class="exp-location">Dubai, DU, United Arab Emirates</p>
+      <h3><a class="exp-title-link" href="{{ url_for('experience_detail', slug=e.slug) }}">{{ e.name }}</a></h3>
+      <p class="exp-desc">{{ e.description }}</p>
+      <p class="exp-location">{{ e.location }}</p>
+      <a class="exp-more" href="{{ url_for('experience_detail', slug=e.slug) }}">View details &rarr;</a>
     </div>
   </div>
-  <div class="card exp-card">
-    <img src="{{ url_for('static', filename='images/yacht-charter.jpg') }}" alt="Yacht Charter Experience" />
-    <div class="exp-body">
-      <h3>Yacht Charter Experience</h3>
-      <p class="exp-desc">Cruise the marina in style aboard a private luxury yacht</p>
-      <p class="exp-location">Dubai, DU, United Arab Emirates</p>
-    </div>
-  </div>
-  <div class="card exp-card">
-    <img src="{{ url_for('static', filename='images/dhow-cruise.jpg') }}" alt="Dhow Cruise - Dinner" />
-    <div class="exp-body">
-      <h3>Dhow Cruise &ndash; Dinner</h3>
-      <p class="exp-desc">Sail Dubai Creek at sunset with a traditional dinner and live entertainment</p>
-      <p class="exp-location">Dubai, DU, United Arab Emirates</p>
-    </div>
-  </div>
+  {% endfor %}
 </section>
 {% endblock %}

@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='admin.css') }}" />
   <link rel="stylesheet" href="{{ url_for('static', filename='customer.css') }}" />
   <link rel="stylesheet" href="{{ url_for('static', filename='rihla.css') }}" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='experience.css') }}" />
 </head>
 <body>
   <header class="site-header">
@@ -47,5 +48,6 @@
       <a class="footer-link" href="{{ url_for('admin_login') }}">Admin login</a>
     {% endif %}
   </footer>
+  {% block scripts %}{% endblock %}
 </body>
 </html>

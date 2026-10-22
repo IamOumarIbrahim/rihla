@@ -1,0 +1,152 @@
+{% extends "base.html" %}
+{% block title %}{{ e.name }} | {{ company }}{% endblock %}
+{% block content %}
+<a class="back-link" href="{{ url_for('experiences') }}">&larr; All experiences</a>
+
+<figure class="trip-hero">
+  <img src="{{ url_for('static', filename='images/' ~ e.image) }}" alt="{{ e.name }}" />
+  <figcaption>
+    <h1>{{ e.name }}</h1>
+    <p class="tagline">{{ e.tagline }}</p>
+    <span class="trip-chip">{{ e.location }}</span>
+  </figcaption>
+</figure>
+
+<div class="trip-layout">
+  <div class="trip-main">
+
+    <dl class="facts">
+      {% for label, value in e.facts %}
+      <div class="fact"><dt>{{ label }}</dt><dd>{{ value }}</dd></div>
+      {% endfor %}
+    </dl>
+
+    <section>
+      <h2>About this trip</h2>
+      {% for paragraph in e.intro %}
+      <p>{{ paragraph }}</p>
+      {% endfor %}
+      <ul class="check-list">
+        {% for item in e.highlights %}
+        <li>{{ item }}</li>
+        {% endfor %}
+      </ul>
+    </section>
+
+    <section>
+      <h2>What to expect</h2>
+      <ol class="timeline">
+        {% for when, what in e.itinerary %}
+        <li><span class="when">{{ when }}</span>{{ what }}</li>
+        {% endfor %}
+      </ol>
+    </section>
+
+    <section>
+      <h2>What is included</h2>
+      <div class="table-wrap">
+        <table class="table inc-table">
+          <thead>
+            <tr><th>Included</th><th>Not included</th></tr>
+          </thead>
+          <tbody>
+            {% for inc, exc in rows %}
+            <tr>
+              <td{% if inc %} class="yes"{% endif %}>{{ inc }}</td>
+              <td{% if exc %} class="no"{% endif %}>{{ exc }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section>
+      <h2>Location</h2>
+      <p><strong>{{ e.location_name }}</strong>. {{ e.location_text }}</p>
+      <p><strong>Meeting point:</strong> {{ e.meeting_point }}</p>
+      <div class="map-box">
+        <iframe
+          title="Map of {{ e.location_name }}"
+          src="https://maps.google.com/maps?q={{ e.map_query|urlencode }}&amp;z=14&amp;output=embed"
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+          allowfullscreen></iframe>
+      </div>
+      <p class="map-meta">
+        <a href="https://www.google.com/maps/search/?api=1&amp;query={{ e.map_query|urlencode }}" target="_blank" rel="noopener">Open in Google Maps</a>
+        <span>The map needs an internet connection.</span>
+      </p>
+    </section>
+
+    <section>
+      <h2>Your host</h2>
+      <div class="card host">
+        <div class="avatar" aria-hidden="true">{{ e.organizer.initials }}</div>
+        <div>
+          <h3>{{ e.organizer.company }}</h3>
+          <p class="host-role">{{ e.organizer.contact_name }}, {{ e.organizer.role }}</p>
+          <dl>
+            <dt>Phone</dt>
+            <dd><a href="tel:{{ e.organizer.phone|replace(' ', '') }}">{{ e.organizer.phone }}</a></dd>
+            <dt>WhatsApp</dt>
+            <dd>{{ e.organizer.whatsapp }}</dd>
+            <dt>Email</dt>
+            <dd><a href="mailto:{{ e.organizer.email }}">{{ e.organizer.email }}</a></dd>
+            <dt>Office hours</dt>
+            <dd>{{ e.organizer.hours }}</dd>
+            <dt>Licence</dt>
+            <dd>{{ e.organizer.licence }}</dd>
+          </dl>
+        </div>
+      </div>
+    </section>
+
+    <section class="faq">
+      <h2>Frequently asked questions</h2>
+      {% for question, answer in e.faq %}
+      <details>
+        <summary>{{ question }}</summary>
+        <p>{{ answer }}</p>
+      </details>
+      {% endfor %}
+    </section>
+
+  </div>
+
+  <aside class="trip-side">
+    <div class="card book-card">
+      <p class="price-line"><span class="price-big">{{ e.price }}</span><span>{{ e.price_unit }}</span></p>
+      <p class="spots">{{ e.remaining }} of {{ e.capacity }} spots left</p>
+
+      <h3>Pick a date</h3>
+      <div id="availability-calendar" class="cal" data-book-url="{{ url_for('book', experience=e.name) }}">
+        <div class="cal-head">
+          <button type="button" class="cal-nav cal-prev" aria-label="Previous month">&lsaquo;</button>
+          <span class="cal-title" aria-live="polite"></span>
+          <button type="button" class="cal-nav cal-next" aria-label="Next month">&rsaquo;</button>
+        </div>
+        <div class="cal-grid"></div>
+        <div class="cal-legend">
+          <span><i class="swatch available"></i>Available</span>
+          <span><i class="swatch limited"></i>Few spots left</span>
+          <span><i class="swatch off"></i>Not available</span>
+        </div>
+      </div>
+      <p id="cal-summary" class="cal-summary" aria-live="polite">Choose a highlighted day to book.</p>
+
+      {% if e.remaining == 0 %}
+      <span class="badge soldout">Sold out</span>
+      {% else %}
+      <a id="book-link" class="btn" href="{{ url_for('book', experience=e.name) }}">Book this experience</a>
+      {% endif %}
+    </div>
+  </aside>
+</div>
+
+<script id="availability-data" type="application/json">{{ availability|tojson }}</script>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='experience.js') }}"></script>
+{% endblock %}
